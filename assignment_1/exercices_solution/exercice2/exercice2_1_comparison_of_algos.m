@@ -19,11 +19,12 @@ close all
 % Configuration:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-alg0 =  'traingd';% gradient descent
-alg1 = 'trainlm';%  Levenberg-Marquardt algorithm
-alg2 = 'trainbfg';% BFGS quasi Newton algorithm (quasi Newton)
-alg3 = 'traingda';% gradient descent with adaptive learning rate'
-alg4 = 'traincgf';% Fletcher-Reeves conjugate gradient algorithm'
+%create a cell array of the different algo we will use
+algs{1} =  'traingd';% gradient descent
+algs{2} = 'trainlm';%  Levenberg-Marquardt algorithm
+algs{3} = 'trainbfg';% BFGS quasi Newton algorithm (quasi Newton)
+algs{4} = 'traingda';% gradient descent with adaptive learning rate'
+algs{5} = 'traincgf';% Fletcher-Reeves conjugate gradient algorithm'
 
 
 H = 50;% Number of neurons in the hidden layer
@@ -51,94 +52,76 @@ t=y;% Targets. Change to yn to train on noisy data
 %creation of networks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-net0= feedforwardnet(H,alg0);% Define the feedfoward net (hidden layers)
-net1=feedforwardnet(H,alg1);
-net2=feedforwardnet(H,alg2);
-net3=feedforwardnet(H,alg3);
-net4=feedforwardnet(H,alg4);
+%for all networks :
+for i=1:5
+    nets{i} = feedforwardnet(H,algs{i});% Define the feedfoward net (hidden layers
+    nets{i} = configure(nets{i},x,t);% Set the input and output sizes of the net
+    nets{i}.divideFcn = 'dividetrain';% Use training set only (no validation and test split)
+end
 
-net0=configure(net0,x,t);% Set the input and output sizes of the net
-net1=configure(net1,x,t);
-net2=configure(net2,x,t);
-net3=configure(net3,x,t);
-net4=configure(net4,x,t);
 
-net0.divideFcn = 'dividetrain';% Use training set only (no validation and test split)
-net1.divideFcn = 'dividetrain';
-net2.divideFcn = 'dividetrain';
-net3.divideFcn = 'dividetrain';
-net4.divideFcn = 'dividetrain';
 
 % Initialize the weights (randomly)
-net0=init(net0);
+nets{1}=init(nets{1});
+
 % Set the same weights for all networks 
-net1.iw{1,1}=net0.iw{1,1};
-net2.iw{1,1}=net0.iw{1,1};
-net3.iw{1,1}=net0.iw{1,1};
-net4.iw{1,1}=net0.iw{1,1};
-net1.lw{2,1}=net0.lw{2,1};
-net2.lw{2,1}=net0.lw{2,1};
-net3.lw{2,1}=net0.lw{2,1};
-net4.lw{2,1}=net0.lw{2,1};
-% Set same biases for all networks 
-net1.b{1}=net0.b{1};
-net1.b{2}=net0.b{2};
-net2.b{1}=net0.b{1};
-net2.b{2}=net0.b{2};
-net3.b{1}=net0.b{1};
-net3.b{2}=net0.b{2};
-net4.b{1}=net0.b{1};
-net4.b{2}=net0.b{2};
+for i=2:5
+    nets{i}.iw{1,1} =nets{1}.iw{1,1};
+    nets{i}.iw{2,1} =nets{1}.lw{2,1};
+    nets{i}.b{1}=nets{1}.b{1};
+    nets{i}.b{2}=nets{1}.b{2};
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %training and simulation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-net0.trainParam.epochs=delta_epochs(1);  % set the number of epochs for the training 
-net1.trainParam.epochs=delta_epochs(1);
-net2.trainParam.epochs=delta_epochs(1);
-net3.trainParam.epochs=delta_epochs(1);
-net4.trainParam.epochs=delta_epochs(1);
 
-net0=train(net0,x,t);   % train the networks
-net1=train(net1,x,t);
-net2=train(net2,x,t);
-net3=train(net3,x,t);
-net4=train(net4,x,t);
 
-a01=sim(net0,x); a11=sim(net1,x);  % simulate the networks with the input vector x
-a21=sim(net2,x); a31=sim(net3,x);
-a41=sim(net4,x);
+% set the number of epochs for the training 
+for i=1:5
+    nets{i}.trainParam.epochs=delta_epochs(1); 
+end
 
-net0.trainParam.epochs=delta_epochs(2);
-net1.trainParam.epochs=delta_epochs(2);
-net2.trainParam.epochs=delta_epochs(2);
-net3.trainParam.epochs=delta_epochs(2);
-net4.trainParam.epochs=delta_epochs(2);
+% train the networks
+for i=1:5
+    nets{i}=train(nets{i},x,t);
+end
 
-net0=train(net0,x,t);
-net1=train(net1,x,t);
-net2=train(net2,x,t);
-net3=train(net3,x,t);
-net4=train(net4,x,t);
+% simulate the networks with the input vector x
+for i=1:5
+    a1{i}=sim(nets{i},x)
+end
 
-a02=sim(net0,x); a12=sim(net1,x);
-a22=sim(net2,x); a32=sim(net3,x);
-a42=sim(net4,x);
+% set the number of epochs for the training 
+for i=1:5
+    net{i}.trainParam.epochs=delta_epochs(2); 
+end
 
-net0.trainParam.epochs=delta_epochs(3);
-net1.trainParam.epochs=delta_epochs(3);
-net2.trainParam.epochs=delta_epochs(3);
-net3.trainParam.epochs=delta_epochs(3);
-net4.trainParam.epochs=delta_epochs(3);
+% train the networks
+for i=1:5
+    nets{i}=train(nets{i},x,t);
+end
 
-net0=train(net0,x,t);
-net1=train(net1,x,t);
-net2=train(net2,x,t);
-net3=train(net3,x,t);
-net4=train(net4,x,t);
+% simulate the networks with the input vector x
+for i=1:5
+    a2{i}=sim(nets{i},x)
+end
 
-a03=sim(net0,x); a13=sim(net1,x);
-a23=sim(net2,x); a33=sim(net3,x);
-a43=sim(net4,x); 
+% set the number of epochs for the training 
+for i=1:5
+    net{i}.trainParam.epochs=delta_epochs(3); 
+end
+
+% train the networks
+for i=1:5
+    nets{i}=train(nets{i},x,t);
+end
+
+% simulate the networks with the input vector x
+for i=1:5
+    a3{i}=sim(nets{i},x)
+end
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %plots of estimation and regression between targets and outputs
@@ -146,55 +129,38 @@ a43=sim(net4,x);
 figure
 subplot(3,6,1);
 % plot the sine function and the output of the networks
-plot(x,t,'bx',x,a01,'r',x,a11,'g',x,a21,'m',x,a31,'m',x,a41,'y');
+plot(x,t,'bx',x,a1{1},'r',x,a1{2},'g',x,a1{3},'m',x,a1{4},'m',x,a1{5},'y');
 title([num2str(epochs(1)),' epochs']);
-legend('target',alg0,alg1,alg2,alg3,alg4,'Location','north');
-subplot(3,6,2);
-postregm(a01,y); % perform a linear regression analysis and plot the result
-subplot(3,6,3);
-postregm(a11,y);
-subplot(3,6,4);
-postregm(a21,y);
-subplot(3,6,5);
-postregm(a31,y);
-subplot(3,6,6);
-postregm(a41,y);
-%
+legend('target',algs{1},algs{2},algs{3},algs{4},algs{5},'Location','north');
+% perform a linear regression analysis and plot the result
+for i=2:6
+    subplot(3,6,i);
+    postregm(a1{i-1},y);
+end
 subplot(3,6,7);
-plot(x,t,'bx',x,a02,'r',x,a12,'g',x,a22,'m',x,a32,'m',x,a42,'y');
+plot(x,t,'bx',x,a2{1},'r',x,a2{2},'g',x,a2{3},'m',x,a2{4},'m',x,a2{5},'y');
 title([num2str(epochs(2)),' epoch']);
-legend('target',alg0,alg1,alg2,alg3,alg4,'Location','north');
-subplot(3,6,8);
-postregm(a02,y);
-subplot(3,6,9);
-postregm(a12,y);
-subplot(3,6,10);
-postregm(a22,y);
-subplot(3,6,11);
-postregm(a32,y);
-subplot(3,6,12);
-postregm(a42,y);
-%
+legend('target',algs{1},algs{2},algs{3},algs{4},algs{5},'Location','north');
+
+for i=8:12
+    subplot(3,6,i);
+    postregm(a2{i-7},y);
+end 
 subplot(3,6,13);
-plot(x,t,'bx',x,a03,'r',x,a13,'g',x,a23,'m',x,a33,'m',x,a43,'y');
+plot(x,t,'bx',x,a3{1},'r',x,a3{2},'g',x,a3{3},'m',x,a3{4},'m',x,a3{5},'y');
 title([num2str(epochs(3)),' epoch','wsh']);
-legend('target',alg0,alg1,alg2,alg3,alg4,'Location','north');
-subplot(3,6,14);
-postregm(a03,y);
-subplot(3,6,15);
-postregm(a13,y);
-subplot(3,6,16);
-postregm(a23,y);
-subplot(3,6,17);
-postregm(a33,y);
-subplot(3,6,18);
-postregm(a43,y);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%plot MSE vs #epochs
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-
+legend('target',algs{1},algs{2},algs{3},algs{4},algs{5},'Location','north');
+for i=14:18
+    subplot(3,6,i);
+    postregm(a3{i-13},y);
+end
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %plot MSE vs #epochs
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% 
+% 
+% 
+% 
+% 
+% figure
