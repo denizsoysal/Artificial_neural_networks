@@ -1,5 +1,4 @@
-clear
-clc
+
 close all
 
 %%%%%%%%%%%
@@ -373,14 +372,17 @@ postregm(a43,y);
 %plot MSE vs #epochs experiment - learning sine function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-algs{1} =  'traingd';% gradient descent
-algs{2} = 'trainlm';%  Levenberg-Marquardt algorithm
-algs{3} = 'trainbfg';% BFGS quasi Newton algorithm (quasi Newton)
-algs{4} = 'traingda';% gradient descent with adaptive learning rate'
-algs{5} = 'traincgf';% Fletcher-Reeves conjugate gradient algorithm'
-algs{6} = 'traingdm';%gradient descent with momentum
-algs{7} = 'traingdx';%gradient descent with momentum and adaptive learning rate
-algs{8} = "traincgp";%Polak-Ribiere conjugate gradient algorithm
+
+algs{1} =  'trainlm';%  Levenberg-Marquardt algorithm
+algs{2} = 'trainbfg';% BFGS quasi Newton algorithm (quasi Newton)
+algs{3} = "traincgp";%Polak-Ribiere conjugate gradient algorithm
+algs{4} = 'traincgf';% Fletcher-Reeves conjugate gradient algorithm'
+algs{5} = 'traingdx';%gradient descent with momentum and adaptive learning rate
+algs{6} = 'traingda';% gradient descent with adaptive learning rate'
+algs{7} = 'traingdm';%gradient descent with momentum
+algs{8} = "traingd";%Polak-Ribiere conjugate gradient algorithm
+
+
 
 
 for i=1:8
@@ -414,3 +416,21 @@ ylabel('MSE')
 
 sgtitle('Performance comparison of different algorithm - one layer MLP learning a sine function')
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%plots best MSE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% figure
+% y = [tr{1}.best_perf,trCopy{1}.best_perf;tr{2}.best_perf,trCopy{2}.best_perf;tr{3}.best_perf,trCopy{3}.best_perf;tr{4}.best_perf,trCopy{4}.best_perf;tr{5}.best_perf,trCopy{5}.best_perf;tr{6}.best_perf,trCopy{6}.best_perf;tr{7}.best_perf,trCopy{7}.best_perf;tr{8}.best_perf,trCopy{8}.best_perf];
+% 
+% barh(y)
+% set(gca,'XScale','log')
+% title('MSE of the different algorithms after 2000 epochs : Learning of the sine function (logarithmic scale)')
+% yticklabels({algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8}})
+
+figure
+y = [tr{1}.best_perf,tr{2}.best_perf,tr{3}.best_perf,tr{4}.best_perf,tr{5}.best_perf,tr{6}.best_perf,tr{7}.best_perf,tr{8}.best_perf];
+barh(y)
+set(gca,'XScale','log')
+title('MSE of the different algorithms after 2000 epochs : Learning of the noisy sine function (logarithmic scale)')
+yticklabels({algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8}})

@@ -187,6 +187,140 @@ a43=sim(net4,x); a53=sim(net5,x);
 a63=sim(net6,x); a73=sim(net7,x);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%plots of estimation of functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure
+subplot(2,4,1);
+plot(x,t,'bx',x,a01);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg0, ' after ', num2str(epochs(1)),' epochs']);
+subplot(2,4,2);
+plot(x,t,'bx',x,a11);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg1, ' after ', num2str(epochs(1)),' epochs']);
+subplot(2,4,3);
+plot(x,t,'bx',x,a21);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg2, ' after ', num2str(epochs(1)),' epochs']);
+subplot(2,4,4);
+plot(x,t,'bx',x,a31);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg3, ' after ', num2str(epochs(1)),' epochs']);
+subplot(2,4,5);
+plot(x,t,'bx',x,a41);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg4, ' after ', num2str(epochs(1)),' epochs']);
+subplot(2,4,6);
+plot(x,t,'bx',x,a51);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg5, ' after ', num2str(epochs(1)),' epochs']);
+subplot(2,4,7);
+plot(x,t,'bx',x,a61);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg6, ' after ', num2str(epochs(1)),' epochs']);
+subplot(2,4,8);
+plot(x,t,'bx',x,a71);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg7, 'after ', num2str(epochs(1)),' epochs']);
+
+
+
+
+figure
+subplot(2,4,1);
+plot(x,t,'bx',x,a02);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg0, ' after ', num2str(epochs(2)),' epochs']);
+subplot(2,4,2);
+plot(x,t,'bx',x,a12);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg1, ' after ', num2str(epochs(2)),' epochs']);
+subplot(2,4,3);
+plot(x,t,'bx',x,a22);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg2, ' after ', num2str(epochs(2)),' epochs']);
+subplot(2,4,4);
+plot(x,t,'bx',x,a32);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg3, ' after ', num2str(epochs(2)),' epochs']);
+subplot(2,4,5);
+plot(x,t,'bx',x,a42);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg4, ' after ', num2str(epochs(2)),' epochs']);
+subplot(2,4,6);
+plot(x,t,'bx',x,a52);
+title(['Approximation of ', alg5, ' after ', num2str(epochs(2)),' epochs']);
+subplot(2,4,7);
+plot(x,t,'bx',x,a62);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg6, ' after ', num2str(epochs(2)),' epochs']);
+subplot(2,4,8);
+plot(x,t,'bx',x,a72);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg7, 'after ', num2str(epochs(2)),' epochs']);
+
+
+figure
+subplot(2,4,1);
+plot(x,t,'bx',x,a03);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg0, ' after ', num2str(epochs(3)),' epochs']);
+subplot(2,4,2);
+plot(x,t,'bx',x,a13);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg1, ' after ', num2str(epochs(3)),' epochs']);
+subplot(2,4,3);
+plot(x,t,'bx',x,a23);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg2, ' after ', num2str(epochs(3)),' epochs']);
+subplot(2,4,4);
+plot(x,t,'bx',x,a33);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg3, ' after ', num2str(epochs(3)),' epochs']);
+subplot(2,4,5);
+plot(x,t,'bx',x,a43);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg4, ' after ', num2str(epochs(3)),' epochs']);
+subplot(2,4,6);
+plot(x,t,'bx',x,a53);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg5, ' after ', num2str(epochs(3)),' epochs']);
+subplot(2,4,7);
+plot(x,t,'bx',x,a63);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg6, ' after ', num2str(epochs(3)),' epochs']);
+subplot(2,4,8);
+plot(x,t,'bx',x,a73);
+xlim([0 10]);
+ylim([-1 1]);
+title(['Approximation of ', alg7, 'after ', num2str(epochs(3)),' epochs']);
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %plots of estimation and regression between targets and outputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure
@@ -240,49 +374,55 @@ postregm(a43,y);
 %plot MSE vs #epochs experiment - learning sine function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-algs{1} =  'traingd';% gradient descent
-algs{2} = 'trainlm';%  Levenberg-Marquardt algorithm
-algs{3} = 'trainbfg';% BFGS quasi Newton algorithm (quasi Newton)
-algs{4} = 'traingda';% gradient descent with adaptive learning rate'
-algs{5} = 'traincgf';% Fletcher-Reeves conjugate gradient algorithm'
-algs{6} = 'traingdm';%gradient descent with momentum
-algs{7} = 'traingdx';%gradient descent with momentum and adaptive learning rate
-algs{8} = "traincgp";%Polak-Ribiere conjugate gradient algorithm
+
+algs{1} =  'trainlm';%  Levenberg-Marquardt algorithm
+algs{2} = 'trainbfg';% BFGS quasi Newton algorithm (quasi Newton)
+algs{3} = "traincgp";%Polak-Ribiere conjugate gradient algorithm
+algs{4} = 'traincgf';% Fletcher-Reeves conjugate gradient algorithm'
+algs{5} = 'traingdx';%gradient descent with momentum and adaptive learning rate
+algs{6} = 'traingda';% gradient descent with adaptive learning rate'
+algs{7} = 'traingdm';%gradient descent with momentum
+algs{8} = "traingd";%Polak-Ribiere conjugate gradient algorithm
 
 
 for i=1:8
     nets{i}=feedforwardnet(H,algs{i})
     nets{i}=configure(nets{i},x,t);% Set the input and output sizes of the net
     nets{i}.divideFcn = 'dividetrain';
-    nets{i}.trainParam.epochs=1000;  % set the number of epochs for the training 
+    nets{i}.trainParam.epochs=2000;  % set the number of epochs for the training 
     [nets{i},tr{i}]=train(nets{i},x,t);
 end
 
 figure
-subplot(1,3,1);
+subplot(1,2,1);
 semilogy(tr{1}.epoch, tr{1}.perf, tr{2}.epoch, tr{2}.perf,tr{3}.epoch,... 
-    tr{3}.perf,tr{4}.epoch, tr{4}.perf,tr{5}.epoch, tr{5}.perf,tr{6}.epoch, tr{6}.perf,tr{7}.epoch, tr{7}.perf,...
-    tr{8}.epoch, tr{8}.perf);
+    tr{3}.perf,tr{4}.epoch, tr{4}.perf,tr{5}.epoch, tr{5}.perf,tr{6}.epoch, tr{6}.perf,tr{7}.epoch, tr{7}.perf,'m',...
+    tr{8}.epoch, tr{8}.perf,'r','LineWidth',2);
 xlabel('epoch') 
 ylabel('MSE') 
 legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},'Location','north');
 
-subplot(1,3,2);
+%I don't know why but gradient descent time does not start at 0
+%this is a work around I have found
+tr{1}.time = tr{1}.time - tr{1}.time(1);
+subplot(1,2,2);
 semilogy(tr{1}.time, tr{1}.perf, tr{2}.time, tr{2}.perf,tr{3}.time,... 
-    tr{3}.perf,tr{4}.time, tr{4}.perf,tr{5}.time, tr{5}.perf,tr{6}.time, tr{6}.perf,tr{7}.time, tr{7}.perf,...
-    tr{8}.time, tr{8}.perf);
+    tr{3}.perf,tr{4}.time, tr{4}.perf,tr{5}.time, tr{5}.perf,tr{6}.time, tr{6}.perf,tr{7}.time, tr{7}.perf,'m',...
+    tr{8}.time, tr{8}.perf,'r','LineWidth',2);
 legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},'Location','north');
 xlabel('time [s]') 
 ylabel('MSE') 
 
-subplot(1,3,3);
-semilogy(tr{1}.epoch, tr{1}.gradient, tr{2}.epoch, tr{2}.gradient,tr{3}.epoch,... 
-    tr{3}.gradient,tr{4}.epoch, tr{4}.gradient,tr{5}.epoch, tr{5}.gradient,tr{6}.epoch, tr{6}.gradient,tr{7}.epoch, tr{7}.gradient,...
-    tr{8}.epoch, tr{8}.gradient);
-legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},'Location','north');
-xlabel('epoch') 
-ylabel('gradient')
-
 
 sgtitle('Performance comparison of different algorithm - one layer MLP learning a noisy sine function')
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%plots best MSE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure
+y = [tr{1}.best_perf,tr{2}.best_perf,tr{3}.best_perf,tr{4}.best_perf,tr{5}.best_perf,tr{6}.best_perf,tr{7}.best_perf,tr{8}.best_perf];
+barh(y)
+set(gca,'XScale','log')
+title('MSE of the different algorithms after 2000 epochs : Learning of the noisy sine function (logarithmic scale)')
+yticklabels({algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8}})
