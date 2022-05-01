@@ -40,6 +40,34 @@ validation_set = sampled_data(1001:2000,:);
 %let's take the last 1000 samples as test set
 test_set = sampled_data(2001:3000,:);
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%Training of the Neural Network%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+algo = 'trainlm';
+net= feedforwardnet([20,20],algo);% Define the feedfoward net (3 hidden layers)
+net.trainParam.epochs=20;
+%train the network with training and validation set
+
+%we will concatenate train, validation set 
+%then, in the training function, we select net.divideFcn = 'divideind' to select
+%training, validation  based on index 
+%important to do that to avoid mixing the different datasets ! 
+
+inputX1 = [training_set(:,1);validation_set(:,1)];
+inputX2 = [training_set(:,2);validation_set(:,2)];
+target = [training_set(:,3);validation_set(:,3)];
+
+net.divideFcn = 'divideind';
+net.divideParam.trainInd = 1:1000;
+net.divideParam.valInd = 1001:2000;
+
+input = [inputX1,inputX2];
+[net,tr]=train(net,input.',target.');
+
+
+
 %let's plot the surface of the training set 
 F=scatteredInterpolant(training_set(:,1), training_set(:,2), training_set(:,3));
 [x,y] = meshgrid(0:0.01:1);
@@ -52,32 +80,67 @@ xlabel('X1'), ylabel('X2'), zlabel('Tnew')
 legend('Sample Points','Interpolated Surface','Location','NorthWest')
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%Training of the Neural Network%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%Comparison test surface and approximation of model %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-algo = 'trainlm';
-net= feedforwardnet([20,12,8],algo);% Define the feedfoward net (3 hidden layers)
-net.trainParam.epochs=1000;
-%train the network with training and validation set
 
-%we will concatenate train, validation set and test set
-%then, in the training function, we select net.divideFcn = 'divideind' to select
-%training, validation and test set based on index 
-%important to do that to avoid mixing the different datasets ! 
+figure
+%actual test surface
+subplot(2,1,1);
+F=scatteredInterpolant(test_set(:,1), test_set(:,2), test_set(:,3));
+[x,y] = meshgrid(0:0.01:1);
+vq1 = F(x,y);
+plot3(test_set(:,1),test_set(:,2),test_set(:,3),'.')
+hold on
+mesh(x,y,vq1)
+title('Test set')
+xlabel('X1'), ylabel('X2'), zlabel('Tnew (actual label)')
+legend('Sample Points','Interpolated Surface','Location','NorthWest')
+%approximation of neural network 
+test_res=sim(net,test_set(:,1:2)');
+subplot(2,1,2);
+F=scatteredInterpolant(test_set(:,1), test_set(:,2), test_res');
+[x2,y2] = meshgrid(0:0.01:1);
+% F.Method = 'nearest';
+vq2 = F(x2,y2);
+plot3(test_set(:,1),test_set(:,2),test_res','.')
+hold on
+mesh(x2,y2,vq2)
+title('Approximation by the network')
+xlabel('X1'), ylabel('X2'), zlabel('Tnew (prediction of model)')
+legend('Sample Points','Interpolated Surface','Location','NorthWest')
 
-inputX1 = [training_set(:,1);validation_set(:,1);test_set(:,1)];
-inputX2 = [training_set(:,2);validation_set(:,2);test_set(:,2)];
-target = [training_set(:,3);validation_set(:,3);test_set(:,3)];
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%Comparison test surface and approximation of model %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-net.divideFcn = 'divideind';
-net.divideParam.trainInd = 1:1000;
-net.divideParam.valInd = 1001:2000;
-net.divideParam.testInd= 2001:3000;
+%here, we will see the MSE for different neural network 
 
-input = [inputX1,inputX2];
-[net,tr]=train(net,input.',target.');
+nets{1} = feedforwardnet([3,3],algo);
+nets{2} = feedforwardnet([5,5],algo);
+nets{3} = feedforwardnet([10,10],algo);
+nets{4} = feedforwardnet([15,15],algo);
+nets{5} = feedforwardnet([20,20],algo);
+nets{5} = feedforwardnet([25,25],algo);
 
+
+
+tr=cell(1,5);
+for i=1:5
+    nets{i}.trainParam.epochs=50;  % set the number of epochs for the training 
+    nets{i}.divideFcn = 'divideind';
+    nets{i}.divideParam.trainInd = 1:1000;
+    nets{i}.divideParam.valInd = 1001:2000;
+    [nets{i},tr{i}]=train(nets{i},input.',target.');
+end
+
+figure
+y = [tr{1}.best_perf,tr{2}.best_perf,tr{3}.best_perf,tr{4}.best_perf,tr{5}.best_perf];
+bar(y)
+set(gca,'YScale','log')
+title('MSE of a 2 hidden layers MLP after 50 epoch, for different number of neurons (logarithmic scale)')
+xticklabels(["3","5","10","15","20","25" ]);
 
 
 

@@ -368,6 +368,7 @@ postregm(a33,y);
 subplot(3,6,18);
 postregm(a43,y);
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %plot MSE vs #epochs experiment - learning sine function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -381,15 +382,15 @@ algs{5} = 'traingdx';%gradient descent with momentum and adaptive learning rate
 algs{6} = 'traingda';% gradient descent with adaptive learning rate'
 algs{7} = 'traingdm';%gradient descent with momentum
 algs{8} = "traingd";%Polak-Ribiere conjugate gradient algorithm
+algs{9} = "trainbr";%Bayesian Learning
 
 
 
-
-for i=1:8
+for i=1:9
     nets{i}=feedforwardnet(H,algs{i})
     nets{i}=configure(nets{i},x,t);% Set the input and output sizes of the net
     nets{i}.divideFcn = 'dividetrain';
-    nets{i}.trainParam.epochs=1000;  % set the number of epochs for the training 
+    nets{i}.trainParam.epochs=2000;  % set the number of epochs for the training 
     [nets{i},tr{i}]=train(nets{i},x,t);
 end
 
@@ -397,10 +398,10 @@ figure
 subplot(1,2,1);
 semilogy(tr{1}.epoch, tr{1}.perf, tr{2}.epoch, tr{2}.perf,tr{3}.epoch,... 
     tr{3}.perf,tr{4}.epoch, tr{4}.perf,tr{5}.epoch, tr{5}.perf,tr{6}.epoch, tr{6}.perf,tr{7}.epoch, tr{7}.perf,'m',...
-    tr{8}.epoch, tr{8}.perf,'r','LineWidth',2);
+    tr{8}.epoch, tr{8}.perf,'r',tr{9}.epoch,tr{9}.perf,'g','LineWidth',2);
 xlabel('epoch') 
 ylabel('MSE') 
-legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},'Location','north');
+legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},algs{9},'Location','north');
 
 %I don't know why but gradient descent time does not start at 0
 %this is a work around I have found
@@ -408,8 +409,8 @@ tr{1}.time = tr{1}.time - tr{1}.time(1);
 subplot(1,2,2);
 semilogy(tr{1}.time, tr{1}.perf, tr{2}.time, tr{2}.perf,tr{3}.time,... 
     tr{3}.perf,tr{4}.time, tr{4}.perf,tr{5}.time, tr{5}.perf,tr{6}.time, tr{6}.perf,tr{7}.time, tr{7}.perf,'m',...
-    tr{8}.time, tr{8}.perf,'r','LineWidth',2);
-legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},'Location','north');
+    tr{8}.time, tr{8}.perf,'r',tr{9}.time,tr{9}.perf,'g','LineWidth',2);
+legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},algs{9},'Location','north');
 xlabel('time [s]') 
 ylabel('MSE') 
 
@@ -420,17 +421,21 @@ sgtitle('Performance comparison of different algorithm - one layer MLP learning 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %plots best MSE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % figure
-% y = [tr{1}.best_perf,trCopy{1}.best_perf;tr{2}.best_perf,trCopy{2}.best_perf;tr{3}.best_perf,trCopy{3}.best_perf;tr{4}.best_perf,trCopy{4}.best_perf;tr{5}.best_perf,trCopy{5}.best_perf;tr{6}.best_perf,trCopy{6}.best_perf;tr{7}.best_perf,trCopy{7}.best_perf;tr{8}.best_perf,trCopy{8}.best_perf];
+% y = [tr{1}.best_perf,trCopy{1}.best_perf;tr{2}.best_perf,trCopy{2}.best_perf;tr{3}.best_perf,trCopy{3}.best_perf;tr{4}.best_perf,trCopy{4}.best_perf;tr{5}.best_perf,trCopy{5}.best_perf;tr{6}.best_perf,trCopy{6}.best_perf;tr{7}.best_perf,trCopy{7}.best_perf;tr{8}.best_perf,trCopy{8}.best_perf;tr{9}.best_perf,trCopy{9}.best_perf];
 % 
 % barh(y)
 % set(gca,'XScale','log')
 % title('MSE of the different algorithms after 2000 epochs : Learning of the sine function (logarithmic scale)')
-% yticklabels({algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8}})
+% yticklabels({algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},algs{9}})
+% 
+
+
 
 figure
-y = [tr{1}.best_perf,tr{2}.best_perf,tr{3}.best_perf,tr{4}.best_perf,tr{5}.best_perf,tr{6}.best_perf,tr{7}.best_perf,tr{8}.best_perf];
+y = [tr{1}.best_perf,tr{2}.best_perf,tr{3}.best_perf,tr{4}.best_perf,tr{5}.best_perf,tr{6}.best_perf,tr{7}.best_perf,tr{8}.best_perf,tr{9}.best_perf];
 barh(y)
 set(gca,'XScale','log')
-title('MSE of the different algorithms after 2000 epochs : Learning of the noisy sine function (logarithmic scale)')
-yticklabels({algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8}})
+title('MSE of the different algorithms after 2000 epochs : Learning of the sine function (logarithmic scale)')
+yticklabels({algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},algs{9}})

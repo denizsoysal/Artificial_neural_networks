@@ -29,7 +29,7 @@ alg6 = 'traingdx';%gradient descent with momentum and adaptive learning rate
 alg7 = "traincgp";%Polak-Ribiere conjugate gradient algorithm
 
 H = 50;% Number of neurons in the hidden layer
-delta_epochs = [1,14,2000];% Number of epochs to train in each step
+delta_epochs = [20,20,1960];% Number of epochs to train in each step
 epochs = cumsum(delta_epochs);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -185,6 +185,26 @@ a03=sim(net0,x); a13=sim(net1,x);
 a23=sim(net2,x); a33=sim(net3,x);
 a43=sim(net4,x); a53=sim(net5,x);
 a63=sim(net6,x); a73=sim(net7,x);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%comparison between 2 epochs for trainlm to see overfitting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+figure
+subplot(2,1,1);
+plot(x,t,'bx',x,a12);
+xlim([0 10]);
+ylim([-1.5 1.5]);
+title(['Approximation of ', alg1, ' after ', num2str(epochs(2)),' epochs']);
+subplot(2,1,2);
+plot(x,t,'bx',x,a13);
+xlim([0 10]);
+ylim([-1.5 1.5]);
+title(['Approximation of ', alg1, ' after ', num2str(epochs(3)),' epochs']);
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %plots of estimation of functions
@@ -383,9 +403,11 @@ algs{5} = 'traingdx';%gradient descent with momentum and adaptive learning rate
 algs{6} = 'traingda';% gradient descent with adaptive learning rate'
 algs{7} = 'traingdm';%gradient descent with momentum
 algs{8} = "traingd";%Polak-Ribiere conjugate gradient algorithm
+algs{9} = "trainbr";%Bayesian Learning
 
 
-for i=1:8
+
+for i=1:9
     nets{i}=feedforwardnet(H,algs{i})
     nets{i}=configure(nets{i},x,t);% Set the input and output sizes of the net
     nets{i}.divideFcn = 'dividetrain';
@@ -397,10 +419,10 @@ figure
 subplot(1,2,1);
 semilogy(tr{1}.epoch, tr{1}.perf, tr{2}.epoch, tr{2}.perf,tr{3}.epoch,... 
     tr{3}.perf,tr{4}.epoch, tr{4}.perf,tr{5}.epoch, tr{5}.perf,tr{6}.epoch, tr{6}.perf,tr{7}.epoch, tr{7}.perf,'m',...
-    tr{8}.epoch, tr{8}.perf,'r','LineWidth',2);
+    tr{8}.epoch, tr{8}.perf,'r',tr{9}.epoch,tr{9}.perf,'g','LineWidth',2);
 xlabel('epoch') 
 ylabel('MSE') 
-legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},'Location','north');
+legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},algs{9},'Location','north');
 
 %I don't know why but gradient descent time does not start at 0
 %this is a work around I have found
@@ -408,8 +430,8 @@ tr{1}.time = tr{1}.time - tr{1}.time(1);
 subplot(1,2,2);
 semilogy(tr{1}.time, tr{1}.perf, tr{2}.time, tr{2}.perf,tr{3}.time,... 
     tr{3}.perf,tr{4}.time, tr{4}.perf,tr{5}.time, tr{5}.perf,tr{6}.time, tr{6}.perf,tr{7}.time, tr{7}.perf,'m',...
-    tr{8}.time, tr{8}.perf,'r','LineWidth',2);
-legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},'Location','north');
+    tr{8}.time, tr{8}.perf,'r',tr{9}.time,tr{9}.perf,'g','LineWidth',2);
+legend(algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},algs{9},'Location','north');
 xlabel('time [s]') 
 ylabel('MSE') 
 
@@ -421,8 +443,8 @@ sgtitle('Performance comparison of different algorithm - one layer MLP learning 
 %plots best MSE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure
-y = [tr{1}.best_perf,tr{2}.best_perf,tr{3}.best_perf,tr{4}.best_perf,tr{5}.best_perf,tr{6}.best_perf,tr{7}.best_perf,tr{8}.best_perf];
+y = [tr{1}.best_perf,tr{2}.best_perf,tr{3}.best_perf,tr{4}.best_perf,tr{5}.best_perf,tr{6}.best_perf,tr{7}.best_perf,tr{8}.best_perf,tr{9}.best_perf];
 barh(y)
 set(gca,'XScale','log')
 title('MSE of the different algorithms after 2000 epochs : Learning of the noisy sine function (logarithmic scale)')
-yticklabels({algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8}})
+yticklabels({algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},algs{9}})
