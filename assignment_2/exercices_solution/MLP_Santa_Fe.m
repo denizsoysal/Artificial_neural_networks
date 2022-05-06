@@ -24,7 +24,7 @@ dataTrainStandardized = (training_set - mu) / sig;
 %we will use a window of size p. This will allows us to train the network
 %to predict a point based on "p" points. We will use the network after to
 %predict the unknown 100 points based on all the training set (1000 points)
-p = 30;
+p = 40;
 training = getTimeSeriesTrainData(dataTrainStandardized,p);
 
 X_train = training(1:p-1,:);
@@ -49,10 +49,13 @@ dataTestStandardized = (test_set - mu) / sig;
 %let's use trainlm
 algo = 'trainlm';
 %number of hidden layer :
-H = 50;
+H = 20;
 %create net with one hidden laeyr
 net = feedforwardnet(H, algo);
 
+
+% Initialize the weights (randomly)
+net=init(net);
 net.trainParam.epochs = 1000;
 net.divideFcn = 'divideblock';
 net.trainParam.max_fail = 6;
@@ -102,7 +105,7 @@ fig = figure;
 plot(dataTestStandardized)
 hold on
 %prediction
-plot(window(end-99:end),'r')
+plot(window(end-98:end),'r')
 legend('Target','Predicted')
 title('Prediction of the test set (next 100 points)');
 
