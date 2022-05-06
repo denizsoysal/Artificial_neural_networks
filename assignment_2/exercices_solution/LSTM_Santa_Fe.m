@@ -28,7 +28,7 @@ dataTrainStandardized = (training_set - mu) / sig;
 %we will use a window of size p. This will allows us to train the network
 %to predict a point based on "p" points. We will use the network after to
 %predict the unknown 100 points based on all the training set (1000 points)
-p = 50;
+p = 10;
 training = getTimeSeriesTrainData(dataTrainStandardized,p);
 
 %based on first "p-1" samples
@@ -57,7 +57,7 @@ dataTestStandardized = (test_set - mu) / sig;
 
 numFeatures = p-1;
 numResponses = 1;
-numHiddenUnits = 50;
+numHiddenUnits = 100;
 
 layers = [ ...
     sequenceInputLayer(numFeatures)

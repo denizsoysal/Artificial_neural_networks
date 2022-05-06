@@ -24,7 +24,7 @@ dataTrainStandardized = (training_set - mu) / sig;
 %we will use a window of size p. This will allows us to train the network
 %to predict a point based on "p" points. We will use the network after to
 %predict the unknown 100 points based on all the training set (1000 points)
-p = 40;
+p = 50;
 training = getTimeSeriesTrainData(dataTrainStandardized,p);
 
 X_train = training(1:p-1,:);
@@ -49,7 +49,7 @@ dataTestStandardized = (test_set - mu) / sig;
 %let's use trainlm
 algo = 'trainlm';
 %number of hidden layer :
-H = 20;
+H = 50;
 %create net with one hidden laeyr
 net = feedforwardnet(H, algo);
 
@@ -97,8 +97,7 @@ end
 %calculate MSE between actual (dataTestStandardized) and predicted
 %(window(end-99:end))
 
-err = immse(dataTestStandardized, window(end-99:end)')
-
+err = immse(dataTestStandardized(1:end-1), window(end-98:end)')
 
 %actual value
 fig = figure;
