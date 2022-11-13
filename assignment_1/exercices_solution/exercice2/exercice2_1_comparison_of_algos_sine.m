@@ -28,7 +28,7 @@ alg6 = 'traingdx';%gradient descent with momentum and adaptive learning rate
 alg7 = "traincgp";%Polak-Ribiere conjugate gradient algorithm
 
 H = 50;% Number of neurons in the hidden layer
-delta_epochs = [1,14,2000];% Number of epochs to train in each step
+delta_epochs = [20,20,1960];% Number of epochs to train in each step
 epochs = cumsum(delta_epochs);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -430,7 +430,7 @@ sgtitle('Performance comparison of different algorithm - one layer MLP learning 
 % title('MSE of the different algorithms after 2000 epochs : Learning of the sine function (logarithmic scale)')
 % yticklabels({algs{1},algs{2},algs{3},algs{4},algs{5},algs{6},algs{7},algs{8},algs{9}})
 % 
-
+% 
 
 
 figure

@@ -45,7 +45,7 @@ test_set = sampled_data(2001:3000,:);
 %%%%%%%%%Training of the Neural Network%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-algo = 'trainlm';
+algo = 'trainbr';
 net= feedforwardnet([20,20],algo);% Define the feedfoward net (3 hidden layers)
 net.trainParam.epochs=20;
 %train the network with training and validation set
@@ -122,13 +122,15 @@ nets{2} = feedforwardnet([5,5],algo);
 nets{3} = feedforwardnet([10,10],algo);
 nets{4} = feedforwardnet([15,15],algo);
 nets{5} = feedforwardnet([20,20],algo);
-nets{5} = feedforwardnet([25,25],algo);
+nets{6} = feedforwardnet([25,25],algo);
+nets{7} = feedforwardnet([30,30],algo);
 
 
 
-tr=cell(1,5);
-for i=1:5
-    nets{i}.trainParam.epochs=50;  % set the number of epochs for the training 
+
+tr=cell(1,7);
+for i=1:7
+    nets{i}.trainParam.epochs=300;  % set the number of epochs for the training 
     nets{i}.divideFcn = 'divideind';
     nets{i}.divideParam.trainInd = 1:1000;
     nets{i}.divideParam.valInd = 1001:2000;
@@ -136,11 +138,11 @@ for i=1:5
 end
 
 figure
-y = [tr{1}.best_perf,tr{2}.best_perf,tr{3}.best_perf,tr{4}.best_perf,tr{5}.best_perf];
+y = [tr{1}.best_perf,tr{2}.best_perf,tr{3}.best_perf,tr{4}.best_perf,tr{5}.best_perf,tr{6}.best_perf,tr{7}.best_perf];
 bar(y)
 set(gca,'YScale','log')
-title('MSE of a 2 hidden layers MLP after 50 epoch, for different number of neurons (logarithmic scale)')
-xticklabels(["3","5","10","15","20","25" ]);
+title('MSE of a 2 hidden layers MLP after 300 epoch, for different number of neurons per hidden layer (logarithmic scale)')
+xticklabels(["3","5","10","15","20","25","30"]);
 
 
 

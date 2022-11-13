@@ -46,22 +46,18 @@ for q=1:size(number_standardised,1)
     reconstruction_error(q) = sqrt(mean(mean((number_standardised-reconstructed_dataset).^2)));
 end
 
-% %plot reconstruction error agains number of eigen values used 
-% plot(reconstruction_error,'LineWidth',2)
-% title("Reconstruction error as a function of number of eigenvalues used")
-% xlabel("Number of eigen values used")
-% ylabel("RMSE")
-% 
 %plot reconstruction error agains number of eigen values used 
 %with also eigenvalues with barplot
-hold on
+subplot(1,2,1)
 plot(reconstruction_error,'LineWidth',2)
-bar(eigen_Values)
-hold off
 title("Reconstruction error as a function of number of eigenvalues used")
 xlabel("Number of eigen values used")
 ylabel("RMSE")
+subplot(1,2,2)
+bar(eigen_Values)
+title("Eigen values")
+xlabel("Indice of the eigen value, starting from the principal component")
+ylabel("Value")
 alpha(.1)
-
 
 

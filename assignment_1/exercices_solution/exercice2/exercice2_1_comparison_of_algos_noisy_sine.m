@@ -47,7 +47,7 @@ sigma=0.2;% Standard deviation of added noise
 yn=y+sigma*randn(size(y));% Add gaussian noise
 
 %target : s
-t=yn;% Targets. Change to yn to train on noisy data
+ =yn;% Targets. Change to yn to train on noisy data
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %creation of networks
